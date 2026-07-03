@@ -1,38 +1,11 @@
-from rooms import Room
 from player import Player
+from rooms import create_rooms
 
 
 class Game:
     def __init__(self):
         self.player = None
-
-        self.rooms = {
-            "Entrance Hall": Room(
-                "Entrance Hall",
-                "A dusty entrance hall with two old wooden doors.",
-                {
-                    "1": "Library",
-                    "2": "Dining Hall"
-                }
-            ),
-
-            "Library": Room(
-                "Library",
-                "Tall bookshelves stretch to the ceiling. Something glows in the corner.",
-                {
-                    "1": "Entrance Hall"
-                }
-            ),
-
-            "Dining Hall": Room(
-                "Dining Hall",
-                "A massive dining table is covered with rotten food.",
-                {
-                    "1": "Entrance Hall"
-                }
-            )
-        }
-
+        self.rooms = create_rooms()
         self.current_room = "Entrance Hall"
 
     def start(self):
@@ -63,14 +36,13 @@ class Game:
         print("=" * 50)
 
     def game_loop(self):
-
         while True:
 
             room = self.rooms[self.current_room]
 
             room.display()
 
-            print("\nActions:")
+            print("\nActions")
             print("3. Check Inventory")
             print("4. View Player Stats")
             print("5. Quit Game")
@@ -81,21 +53,23 @@ class Game:
                 self.current_room = room.exits[choice]
 
             elif choice == "3":
-                print("\n========== INVENTORY ==========")
-
-                if self.player.inventory:
-                    for item in self.player.inventory:
-                        print(f"- {item}")
-                else:
-                    print("Your inventory is empty.")
+                self.show_inventory()
 
             elif choice == "4":
                 self.player.show_stats()
 
             elif choice == "5":
-                print("\nYou leave the haunted manor...")
-                print("Game Over!")
+                print("\nYou escaped the game.")
                 break
 
             else:
-                print("\n❌ Invalid choice. Please try again.")
+                print("\nInvalid choice.")
+
+    def show_inventory(self):
+        print("\n========== INVENTORY ==========")
+
+        if self.player.inventory:
+            for item in self.player.inventory:
+                print(f"- {item}")
+        else:
+            print("Your inventory is empty.")
