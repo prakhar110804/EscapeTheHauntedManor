@@ -36,25 +36,51 @@ class Game:
         print("=" * 55)
 
     def game_loop(self):
+
         while True:
 
             room = self.rooms[self.current_room]
 
             room.display()
 
-            # ---------------- ITEM COLLECTION ----------------
+            # -------- ITEM COLLECTION --------
+
             if room.item and not room.item_taken:
 
                 print(f"\n✨ You found: {room.item}")
 
-                take = input("Do you want to take it? (y/n): ").strip().lower()
+                take = input("Do you want to take it? (y/n): ").lower()
 
                 if take == "y":
                     self.player.add_item(room.item)
                     room.item_taken = True
+
+            # -------- EXIT CHECK --------
+
+            if room.name == "Exit Gate":
+
+                required = [
+                    "Flashlight",
+                    "Rusty Key",
+                    "Ancient Amulet"
+                ]
+
+                if all(self.player.has_item(item) for item in required):
+
+                    print("\n🎉 CONGRATULATIONS!")
+                    print("You unlocked the gate.")
+                    print("You escaped the Haunted Manor!")
+                    print("\n★★★★★ GOOD ENDING ★★★★★")
+
                 else:
-                    print("You leave it where it is.")
-            # -------------------------------------------------
+
+                    print("\n❌ The gate is locked.")
+                    print("You have not collected every required item.")
+                    print("\n★★★★★ BAD ENDING ★★★★★")
+
+                break
+
+            # -------------------------------
 
             print("\nActions")
             print("3. Check Inventory")
@@ -77,7 +103,7 @@ class Game:
 
             elif choice == "5":
 
-                print("\nYou escaped the game.")
+                print("\nYou gave up and left the adventure.")
                 break
 
             else:
