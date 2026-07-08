@@ -43,29 +43,48 @@ class Game:
 
             room.display()
 
-            # -------- ITEM COLLECTION --------
+            # ------------------ BASEMENT PUZZLE ------------------
+            if room.name == "Basement" and not room.item_taken:
 
-            if room.item and not room.item_taken:
+                print("\n🧩 A mysterious voice echoes through the basement...")
+                print("\nRIDDLE")
+                print('"I speak without a mouth and hear without ears."')
+                print("What am I?")
+
+                answer = input("\nYour answer: ").strip().lower()
+
+                if answer == "echo":
+                    print("\n✅ Correct!")
+                    self.player.add_item(room.item)
+                    room.item_taken = True
+                else:
+                    print("\n❌ Wrong answer.")
+                    print("The amulet remains protected.")
+                    continue
+
+            # ---------------- ITEM COLLECTION ----------------
+            elif room.item and not room.item_taken:
 
                 print(f"\n✨ You found: {room.item}")
 
-                take = input("Do you want to take it? (y/n): ").lower()
+                take = input("Do you want to take it? (y/n): ").strip().lower()
 
                 if take == "y":
                     self.player.add_item(room.item)
                     room.item_taken = True
+                else:
+                    print("You leave it where it is.")
 
-            # -------- EXIT CHECK --------
-
+            # ---------------- EXIT CHECK ----------------
             if room.name == "Exit Gate":
 
-                required = [
+                required_items = [
                     "Flashlight",
                     "Rusty Key",
                     "Ancient Amulet"
                 ]
 
-                if all(self.player.has_item(item) for item in required):
+                if all(self.player.has_item(item) for item in required_items):
 
                     print("\n🎉 CONGRATULATIONS!")
                     print("You unlocked the gate.")
@@ -74,15 +93,14 @@ class Game:
 
                 else:
 
-                    print("\n❌ The gate is locked.")
-                    print("You have not collected every required item.")
-                    print("\n★★★★★ BAD ENDING ★★★★★")
+                    print("\n❌ BAD ENDING")
+                    print("The gate remains locked.")
+                    print("You are missing important items.")
 
                 break
 
-            # -------------------------------
-
             print("\nActions")
+            print("1. Move to another room")
             print("3. Check Inventory")
             print("4. View Player Stats")
             print("5. Quit Game")
@@ -90,24 +108,19 @@ class Game:
             choice = input("\nChoose an option: ").strip()
 
             if choice in room.exits:
-
                 self.current_room = room.exits[choice]
 
             elif choice == "3":
-
                 self.show_inventory()
 
             elif choice == "4":
-
                 self.player.show_stats()
 
             elif choice == "5":
-
                 print("\nYou gave up and left the adventure.")
                 break
 
             else:
-
                 print("\nInvalid choice.")
 
     def show_inventory(self):
@@ -115,10 +128,7 @@ class Game:
         print("\n========== INVENTORY ==========")
 
         if self.player.inventory:
-
             for item in self.player.inventory:
                 print(f"• {item}")
-
         else:
-
             print("Your inventory is empty.")
