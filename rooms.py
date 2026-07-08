@@ -14,7 +14,7 @@ class Room:
         self.item = item
         self.enemy = enemy
         self.puzzle = puzzle
-        self.visited = False
+        self.item_taken = False
 
     def display(self):
         print("\n" + "=" * 55)
